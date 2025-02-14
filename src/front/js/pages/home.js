@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 import "../../styles/home.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,6 +21,7 @@ import RestaurantsLogo from "../../img/restaurants.jpg";
 import InterestPointLogo from "../../img/InterestPoint.jpg";
 
 export const Home = () => {
+	const { store } = useContext(Context);
 	const navigate = useNavigate();
 
 	return (
@@ -53,6 +55,7 @@ export const Home = () => {
 					onClick={() => navigate("/login")}
 				>
 					<img src={LoginLogo} alt="Log In" style={{ width: "120px", height: "120px", marginRight: "8px" }} />
+					Log In
 				</Button>
 				<Button
 					style={{ backgroundColor: "#ff8a80", color: "black", border: "2px solid black" }}
@@ -60,24 +63,25 @@ export const Home = () => {
 					onClick={() => navigate("/signup")}
 				>
 					<img src={SignInLogo} alt="Sign In" style={{ width: "120px", height: "120px", marginRight: "8px" }} />
+					Sign In
 				</Button>
 			</div>
 
 			{/* Sección de categorías */}
 			<div className="categories">
-				<button className="category-button" onClick={() => navigate("/signup")}>
+				<button className="category-button" onClick={() => navigate("/cities")}>
 					<img src={CitiesLogo} alt="Cities" className="icon" />
 					<p>Cities</p>
 				</button>
-				<button className="category-button" onClick={() => navigate("/signup")}>
+				<button className="category-button" onClick={() => navigate("/restaurants")}>
 					<img src={RestaurantsLogo} alt="Restaurants" className="icon" />
 					<p>Restaurant</p>
 				</button>
-				<button className="category-button" onClick={() => navigate("/signup")}>
+				<button className="category-button" onClick={() => navigate("/hotels")}>
 					<img src={HotelLogo} alt="Hotel" className="icon" />
 					<p>Hotel</p>
 				</button>
-				<button className="category-button" onClick={() => navigate("/signup")}>
+				<button className="category-button" onClick={() => navigate("/points-of-interest")}>
 					<img src={InterestPointLogo} alt="Interest Point" className="icon" />
 					<p>Interest Point</p>
 				</button>
