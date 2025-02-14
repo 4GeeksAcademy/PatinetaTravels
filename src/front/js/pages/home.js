@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-import Logo from '../../img/PatinetaTravelLogo.png';
 import "../../styles/home.css";
 
 export const Home = () => {
@@ -9,9 +8,7 @@ export const Home = () => {
 	return (
 		<div className="text-center mt-5">
 			<h1>Search, find and enjoy!!</h1>
-			<p>
-				<img src={Logo} />
-			</p>
+			
 			<div className="alert alert-info">
 				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
 			</div>
