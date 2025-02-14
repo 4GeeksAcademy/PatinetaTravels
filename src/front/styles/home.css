@@ -1,7 +1,117 @@
-/*
-    home.css: This website contains selectors only used in home.css
+/* Elimina margen y padding del body y html para evitar scroll horizontal */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Quicksand', sans-serif;
+}
 
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
+/* Fondo principal con el color exacto */
+.home-container {
+  background-color: #83BF9C;
+  min-height: 100vh;
+  padding-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Sección del encabezado */
+.header-section {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
+
+.home-image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 10px;
+}
+
+/* Texto de bienvenida */
+.lead {
+  font-size: 70px;
+  color: white;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Botones Log In y Sign In */
+.login-btn, .signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 200px;
+  min-height: 60px;
+  overflow: hidden;
+}
+
+.login-btn:hover, .signin-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Sección de categorías */
+.categories {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.category-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  flex-grow: 1;
+  max-width: 200px;
+  border-radius: 10px;
+}
+
+.category-button:hover {
+  transform: scale(1.15);
+  background-color: rgba(255, 255, 255, 0.3); /* Fondo semitransparente */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Íconos de categorías */
+.icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease; /* Animación suave para el icono */
+}
+
+.category-button:hover .icon {
+  transform: rotate(360deg); /* Giro del icono al pasar el mouse */
+}
+
+.category-button p {
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  margin-top: 8px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
