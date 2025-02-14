@@ -8,6 +8,7 @@ import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import { MainView } from "./pages/MainView"; // Importación correcta de MainView
 import { CityView } from "./pages/CityView";
+import SignUp from "./pages/SignUp";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
@@ -30,6 +31,7 @@ const Layout = () => {
             <Route element={<MainView />} path="/mainview" /> {/* Ruta ajustada a /mainview */}
             <Route element={<CityView />} path="/city/:cityId" /> {/* Ruta ajustada a /CityView */}
             <Route element={<Single />} path="/single/:theid" />
+            <Route element={<SignUp />} path="/signup" /> 
             <Route element={<h1>Not found!</h1>} path="*" />
           </Routes>
           <Footer />
