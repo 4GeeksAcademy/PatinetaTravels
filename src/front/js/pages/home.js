@@ -52,14 +52,14 @@ export const Home = () => {
 					className="mx-2 login-btn"
 					onClick={() => navigate("/login")}
 				>
-					<img src={LoginLogo} alt="Log In" style={{ width: "30px", height: "30px", marginRight: "8px" }} /> Log In
+					<img src={LoginLogo} alt="Log In" style={{ width: "120px", height: "120px", marginRight: "8px" }} />
 				</Button>
 				<Button
 					style={{ backgroundColor: "#ff8a80", color: "black", border: "2px solid black" }}
 					className="mx-2 signin-btn"
 					onClick={() => navigate("/signup")}
 				>
-					<img src={SignInLogo} alt="Sign In" style={{ width: "30px", height: "30px", marginRight: "8px" }} /> Sign In
+					<img src={SignInLogo} alt="Sign In" style={{ width: "120px", height: "120px", marginRight: "8px" }} />
 				</Button>
 			</div>
 
