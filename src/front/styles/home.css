@@ -1,7 +1,155 @@
-/*
-    home.css: This website contains selectors only used in home.css
+/* Elimina margen y padding del body y html para evitar scroll horizontal */
+body, html {
+  margin: 1000;
+  padding: 1000;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Pacifico', cursive;
+}
 
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
+/* Fondo principal con el color exacto */
+.home-container {
+  background-color: #83BF9C;
+  min-height: 100vh;
+  padding-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Sección del encabezado */
+.header-section {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
+
+.home-image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 10px;
+}
+
+/* Texto de bienvenida */
+.lead {
+  font-size: 80px; 
+  color: #ffffff; 
+  font-family: 'Pacifico', cursive; 
+  font-weight: 700; 
+  margin-top: 10px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Botones Log In y Sign In con animación llamativa */
+.login-btn, .signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  max-width: 220px;
+  min-height: 80px;
+  overflow: hidden;
+  border: 3px solid transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.login-btn::before, .signin-btn::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 8px;
+  background: linear-gradient(45deg, #4db6ac, #ff8a80, #ffca28, #4db6ac);
+  z-index: -1;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+
+.login-btn:hover::before, .signin-btn:hover::before {
+  opacity: 1;
+}
+
+.login-btn:hover, .signin-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.6);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.login-btn img, .signin-btn img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-right: 15px;
+  transition: transform 0.3s ease;
+}
+
+.login-btn:hover img, .signin-btn:hover img {
+  transform: rotate(15deg);
+}
+
+
+/* Sección de categorías */
+.categories {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.category-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  flex-grow: 1;
+  max-width: 200px;
+  border-radius: 10px;
+}
+
+.category-button:hover {
+  transform: scale(1.15);
+  background-color: rgba(255, 255, 255, 0.3); /* Fondo semitransparente */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Íconos de categorías */
+.icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease; /* Animación suave para el icono */
+}
+
+.category-button:hover .icon {
+  transform: rotate(360deg); /* Giro del icono al pasar el mouse */
+}
+
+.category-button p {
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  margin-top: 8px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
