@@ -2,10 +2,11 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, City, Restaurant, Interest_point, Hotel, Favorites
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
+from sqlalchemy import select
 
 api = Blueprint('api', __name__)
 
@@ -62,8 +63,329 @@ def login():
            return jsonify(access_token=access_token), 200
         else:
             return jsonify({"msg": "bad email or password"}), 401 
+        
 
-    
+# Gets Usuarios_________ 
+
+@api.route('/User', methods=['GET'])
+def todos_los_usuarios():
+
+
+    data = db.session.scalars(select(User)).all()
+    results = list(map(lambda User: User.serialize(),data))
+   
+    response_body = {
+        "msg": "Hola, aqui tienes la lista de todos los usuarios: ",
+        "results":results
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/User/<int:id>', methods=['GET'])
+def solo_un_usuario(id):
+   
+ try:
+
+    usuario = db.session.execute(select(User).filter_by(id=id)).scalar_one()
+   
+    response_body = {
+        "msg": "Hola, aqui esta el usuario que buscabas ",
+        "results":usuario.serialize()
+    }
+
+
+    return jsonify(response_body), 200
+
+ except:
+
+    return jsonify({"msg":"user not exist"}), 404
+
+
+
+# Gets Ciudades________
+
+
+
+# @api.route('/City', methods=['GET'])
+# def todas_las_ciudades():
+
+
+#     data = db.session.scalars(select(City)).all()
+#     results = list(map(lambda City: City.serialize(),data))
+   
+#     response_body = {
+#         "msg": "Hola, aqui tienes la lista de todas las ciudades: ",
+#         "results":results
+#     }
+
+#     return jsonify(response_body), 200
+
+# @api.route('/City/<int:id>', methods=['GET'])
+# def solo_una_ciudad(id):
+   
+#  try:
+
+#     ciudad = db.session.execute(select(City).filter_by(id=id)).scalar_one()
+   
+#     response_body = {
+#         "msg": "Hola, aqui esta la ciudad que buscas ",
+#         "results":ciudad.serialize()
+#     }
+
+
+#     return jsonify(response_body), 200
+
+#  except:
+
+#     return jsonify({"msg":"City not exist"}), 404
+
+
+
+# # Gets Restaurant_________
+
+
+# @api.route('/Restaurant', methods=['GET'])
+# def todas_loss_restaurantes():
+
+
+#     data = db.session.scalars(select(Restaurant)).all()
+#     results = list(map(lambda Restaurant: Restaurant.serialize(),data))
+   
+#     response_body = {
+#         "msg": "Hola, aqui tienes la lista de todas los Restaurantes: ",
+#         "results":results
+#     }
+
+#     return jsonify(response_body), 200
+
+# @api.route('/Restaurant/<int:id>', methods=['GET'])
+# def solo_un_restaurante(id):
+   
+#  try:
+
+#     restaurante = db.session.execute(select(Restaurant).filter_by(id=id)).scalar_one()
+   
+#     response_body = {
+#         "msg": "Hola, aqui esta la ciudad que buscas ",
+#         "results":restaurante.serialize()
+#     }
+
+
+#     return jsonify(response_body), 200
+
+#  except:
+
+#     return jsonify({"msg":"Restaurant not exist"}), 404
+
+
+
+
+# # Gets Interest_point _________
+
+
+# @api.route('/Interest_point', methods=['GET'])
+# def all_interest_point():
+
+
+#     data = db.session.scalars(select(Interest_point)).all()
+#     results = list(map(lambda Interest_point: Interest_point.serialize(),data))
+   
+#     response_body = {
+#         "msg": "Hola, aqui tienes la lista de todos los puntos de interes: ",
+#         "results":results
+#     }
+
+#     return jsonify(response_body), 200
+
+# @api.route('/Interest_point/<int:id>', methods=['GET'])
+# def one_interest_point(id):
+   
+#  try:
+
+#     interest_point = db.session.execute(select(Interest_point).filter_by(id=id)).scalar_one()
+   
+#     response_body = {
+#         "msg": "Hola, aqui esta el punto de interes que buscas ",
+#         "results":interest_point.serialize()
+#     }
+
+
+#     return jsonify(response_body), 200
+
+#  except:
+
+#     return jsonify({"msg":"Interest point not exist"}), 404
+
+
+
+# # _________# Gets Hotel _________
+
+
+# @api.route('/Hotel', methods=['GET'])
+# def todos_los_hoteles():
+
+
+#     data = db.session.scalars(select(Hotel)).all()
+#     results = list(map(lambda Hotel: Hotel.serialize(),data))
+   
+#     response_body = {
+#         "msg": "Hola, aqui tienes la lista de todos los hoteles: ",
+#         "results":results
+#     }
+
+#     return jsonify(response_body), 200
+
+# @api.route('/Hotel/<int:id>', methods=['GET'])
+# def solo_un_hotel(id):
+   
+#  try:
+
+#     hotel = db.session.execute(select(Hotel).filter_by(id=id)).scalar_one()
+   
+#     response_body = {
+#         "msg": "Hola, aqui esta el hotel  que buscas ",
+#         "results":hotel.serialize()
+#     }
+
+
+#     return jsonify(response_body), 200
+
+#  except:
+
+#     return jsonify({"msg":"Hotel not exist"}), 404
+
+
+
+
+# # Get Favorites _________
+
+
+
+# @api.route('/Favorites', methods=['GET'])
+# def todos_los_favoritos():
+
+
+#     data = db.session.scalars(select(Favorites)).all()
+#     results = list(map(lambda Favorites: Favorites.serialize(),data))
+   
+#     response_body = {
+#         "msg": "Hola, aqui tienes la lista de todos los favoritos: ",
+#         "results":results
+#     }
+#     return jsonify(response_body), 200
+
+
+
+# #  Metodos post______
+
+# # CITY
+# @api.route('/favorite/City/<int:city_id>', methods=['POST'])
+# def agregar_ciudad_favorita(city_id):
+#     # Obtener el user_id desde el request (se recomienda que venga en el JSON)
+#     data = request.get_json()
+#     user_id = data.get('user_id')
+
+#     if not user_id:
+#         return jsonify({"msg": "User ID is required"}), 400
+
+#     # Verificar que el usuario existe
+#     user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar_one_or_none()
+#     if not user:
+#         return jsonify({"msg": "User not found"}), 404
+
+#     # Crear el favorito y asignar la ciudad
+#     new_favorito = Favorites(user_id=user.id, city_id=city_id)
+#     db.session.add(new_favorito)
+#     db.session.commit()
+
+#     return jsonify({"msg": "Ciudad favorita agregada"}), 201
+
+
+# # Restaurant
+# @api.route('/favorite/Restaurant/<int:restaurant_id>', methods=['POST'])
+# def agregar_restaurant_favorito(restaurant_id):
+#     # Obtener el user_id desde el request (se recomienda que venga en el JSON)
+#     data = request.get_json()
+#     user_id = data.get('user_id')
+
+#     if not user_id:
+#         return jsonify({"msg": "User ID is required"}), 400
+
+#     # Verificar que el usuario existe
+#     user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar_one_or_none()
+#     if not user:
+#         return jsonify({"msg": "User not found"}), 404
+
+#     # Crear el favorito y asignar la ciudad
+#     new_favorito = Favorites(user_id=user.id, restaurant_id=restaurant_id)
+#     db.session.add(new_favorito)
+#     db.session.commit()
+
+#     return jsonify({"msg": "Ciudad favorita agregada"}), 201
+
+# # Interest_point
+# @api.route('/favorite/Interest_point/<int:interest_point_id>', methods=['POST'])
+# def agregar_interest_point_favorito(interest_point_id):
+#     # Obtener el user_id desde el request (se recomienda que venga en el JSON)
+#     data = request.get_json()
+#     user_id = data.get('user_id')
+
+#     if not user_id:
+#         return jsonify({"msg": "User ID is required"}), 400
+
+#     # Verificar que el usuario existe
+#     user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar_one_or_none()
+#     if not user:
+#         return jsonify({"msg": "User not found"}), 404
+
+#     # Crear el favorito y asignar la ciudad
+#     new_favorito = Favorites(user_id=user.id, interest_point_id=interest_point_id)
+#     db.session.add(new_favorito)
+#     db.session.commit()
+
+#     return jsonify({"msg": "Ciudad favorita agregada"}), 201
+
+# # Hotel
+# @api.route('/favorite/Hotel/<int:hotel_id', methods=['POST'])
+# def agregar_hotel_favorito(hotel_id):
+#     # Obtener el user_id desde el request (se recomienda que venga en el JSON)
+#     data = request.get_json()
+#     user_id = data.get('user_id')
+
+#     if not user_id:
+#         return jsonify({"msg": "User ID is required"}), 400
+
+#     # Verificar que el usuario existe
+#     user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar_one_or_none()
+#     if not user:
+#         return jsonify({"msg": "User not found"}), 404
+
+#     # Crear el favorito y asignar el hotel 
+#     new_favorito = Favorites(user_id=user.id, hotel_id=hotel_id)
+#     db.session.add(new_favorito)
+#     db.session.commit()
+
+#     return jsonify({"msg": "Ciudad favorita agregada"}), 201
+
+
+# DELETE planeta favorito
+
+# @app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+# def delete_user(planet_id):
+
+#     user = db.session.execute(db.select(User).filter_by(id=id)).scalar_one()
+#     # hacer filtrado
+#     buscar_planetafavorito_borrar = Favoritos(user_id=user.id,planeta_id=planet_id)
+#     db.session.delete(buscar_planetafavorito_borrar)
+#     db.session.commit()
+
+#     response_body = {
+#         "msg":"planeta favorito del usuario deleted"
+#     }
+
+#     return jsonify(response_body), 200
+
+
     
 
      
@@ -76,25 +398,5 @@ def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200  
-
-
-#ENDPOINT CIUDADES 
-#TODAS LAS CIUDADES
-@api.route("/CIUDADES", methods=["GET"])
-def ciudades():
-     
-     data = db.session.scalars(select(ciudades)).all()
-    results = list(map(lambda CIUDADES: CIUDADES.serialize(),D))
-   
-
-    response_body = {
-        "msg": "Hello, this is your GET /user response ",
-        "results":results
-    }
-
-
-    return jsonify(response_body), 200
-
-
 
 
