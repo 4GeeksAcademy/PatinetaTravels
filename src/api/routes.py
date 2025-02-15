@@ -76,3 +76,25 @@ def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200  
+
+
+#ENDPOINT CIUDADES 
+#TODAS LAS CIUDADES
+@api.route("/CIUDADES", methods=["GET"])
+def ciudades():
+     
+     data = db.session.scalars(select(ciudades)).all()
+    results = list(map(lambda CIUDADES: CIUDADES.serialize(),D))
+   
+
+    response_body = {
+        "msg": "Hello, this is your GET /user response ",
+        "results":results
+    }
+
+
+    return jsonify(response_body), 200
+
+
+
+
