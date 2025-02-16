@@ -2,26 +2,25 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import sys
 from sqlalchemy import Integer, String, Boolean
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import create_engine
-from eralchemy2 import render_er
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from typing import List
 from sqlalchemy import ForeignKey
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-class User(Base):
+class User (db.Model):
+    __tablename__ = "users"
     id = mapped_column(Integer, primary_key=True)
     email = mapped_column(String(120), unique=True, nullable=False)
     password = mapped_column(String(80), unique=False, nullable=False)
     is_active = mapped_column(Boolean(), unique=False, nullable=False)
-    favorites: Mapped[List["City"]] = relationship()
-    favorites: Mapped[List["Restaurant"]] = relationship()
-    favorites: Mapped[List["Interest_point"]] = relationship()
-    favorites: Mapped[List["Hotel"]] = relationship()
-    
+    city: Mapped[List["City"]] = relationship()
+    restaurant : Mapped[List["Restaurant"]] = relationship()
+    interest_point : Mapped[List["Interest_point"]] = relationship()
+    hotel : Mapped[List["Hotel"]] = relationship()
+
+    def __repr__(self):
+         return '<Users %r>' % self.username
 
     def serialize(self):
         return {
@@ -29,7 +28,8 @@ class User(Base):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
-class City (Base):
+class City (db.Model):
+    __tablename__ = "city"
     id = mapped_column(Integer, primary_key=True)
     city_name = mapped_column(String(30),unique=True, nullable=False)
     country_name = mapped_column(String(30),nullable=False)
@@ -44,7 +44,8 @@ class City (Base):
             # do not serialize the password, its a security breach
         }
 
-class Restaurant (Base):
+class Restaurant (db.Model):
+    __tablename__ = "restaurant"
     id =mapped_column(Integer,primary_key=True)
     restaurant_name = mapped_column (String(30), unique=True, nullable=False)
     address = mapped_column(String(100),unique=False, nullable=False)
@@ -59,7 +60,8 @@ class Restaurant (Base):
             # do not serialize the password, its a security breach
         }
 
-class Interest_point(Base):
+class Interest_point(db.Model):
+    __tablename__ = "interest_point"
     id = mapped_column(Integer, primary_key=True)
     int_name = mapped_column(String(100),unique=True, nullable=False)
     locality = mapped_column(String(100),unique=False , nullable=False)
@@ -75,7 +77,8 @@ class Interest_point(Base):
             # do not serialize the password, its a security breach
         }
 
-class Hotel(Base):
+class Hotel(db.Model):
+    __tablename__ = "hotel"
     id = mapped_column(Integer, primary_key=True)
     hotel_name = mapped_column(String(50),unique=True, nullable=False)
     hotel_address = mapped_column(String(100),unique=True, nullable=False)
@@ -90,7 +93,8 @@ class Hotel(Base):
             # do not serialize the password, its a security breach
         }
 
-class Favorites (Base):
+class Favorites (db.Model):
+    __tablename__ = "favorites"
     id = mapped_column(Integer, primary_key=True)
     hotel_id: Mapped[int] = mapped_column(ForeignKey("hotel.id"))
     interest_point_id: Mapped[int] = mapped_column(ForeignKey("interest_point.id"))
