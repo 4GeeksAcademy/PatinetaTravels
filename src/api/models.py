@@ -1,8 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String, Boolean
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import  relationship
 from typing import List
+
 
 db = SQLAlchemy()
 
@@ -19,9 +20,7 @@ class User (db.Model):
     hotel=db.relationship("Hotel", backref="user")
     interest_point=db.relationship("Interest_point", backref="user")
 
-    def __repr__(self):
-         return '<Users %r>' % self.username
-
+    
     def serialize(self):
         return {
             "id": self.id,
@@ -96,19 +95,19 @@ class Hotel(db.Model):
 class Favorites (db.Model):
     __tablename__ = "favorites"
     id = db.Column(Integer, primary_key=True)
-    user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
-    city_id= db.Column(db.Integer, db.ForeignKey("city.id"))
-    hotel_id= db.Column(db.Integer, db.ForeignKey("hotel.id"))
-    restaurant_id= db.Column(db.Integer, db.ForeignKey("restaurant.id"))
-    interest_point_id= db.Column(db.Integer, db.ForeignKey("interest_point.id"))
+    favorites_user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
+    favorites_city_id= db.Column(db.Integer, db.ForeignKey("city.id"))
+    favorites_hotel_id= db.Column(db.Integer, db.ForeignKey("hotel.id"))
+    favorites_restaurant_id= db.Column(db.Integer, db.ForeignKey("restaurant.id"))
+    favorites_interest_point_id= db.Column(db.Integer, db.ForeignKey("interest_point.id"))
 
     def serialize(self):
         return {
             "id": self.id,
-            "hotel_id": self.hotel_id,
-            "interest_point": self.interest_point.id,
-            "restaurant_id": self.restaurant_id,
-            "city_id": self.city_id            
+            "hotel_id": self.favorites_hotel_id,
+            "interest_point": self.favorites_interest_point_id,
+            "restaurant_id": self.favorites_restaurant_id,
+            "city_id": self.favorites_city_id            
             
 
             # do not serialize the password, its a security breach
