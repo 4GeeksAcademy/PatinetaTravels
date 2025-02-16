@@ -27,18 +27,19 @@ def handle_hello():
 
 @api.route("/signup", methods=["POST"])
 def signup():
+    name = request.json.get("name", None)
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
-    # Verificar si el usuario ya existe
+    if not name or not email or not password:
+        return jsonify({"msg": "Todos los campos son obligatorios"}), 400
+
     user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
 
     if user:
         return jsonify({"msg": "El usuario ya existe"}), 400
 
-
-    # Crear nuevo usuario
-    new_user = User(email=email, password=password, is_active=True) 
+    new_user = User(name=name, email=email, password=password, is_active=True) 
     db.session.add(new_user)
     db.session.commit()
 

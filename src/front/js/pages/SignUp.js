@@ -1,23 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/loginform.css";
-const SignUp = () => {
-  const navigate = useNavigate();
 
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "",});
+const SignUp = () => {
+  const { actions } = useContext(Context);
+  const navigate = useNavigate();
+  
+  const [form, setForm] = useState({ 
+    name: "", 
+    email: "", 
+    password: "", 
+    confirmPassword: "" 
+  });
 
   const [errors, setErrors] = useState({});
 
-  const validateEmail = (email) => {
-    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const validateName = (name) => {
-    const re = /^[a-zA-Z\s]+$/;
-    return re.test(name);
-  };
+  const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  const validateName = (name) => /^[a-zA-Z\s]+$/.test(name);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,28 +26,19 @@ const SignUp = () => {
 
     let newErrors = { ...errors };
 
-    if (name === "email" && !validateEmail(value)) {
-      newErrors.email = "⚠ Please enter a valid email!";
-    } else {
-      delete newErrors.email;
-    }
+    if (name === "email" && !validateEmail(value)) newErrors.email = "⚠ Please enter a valid email!";
+    else delete newErrors.email;
 
-    if (name === "name" && !validateName(value)) {
-      newErrors.name = "⚠ Name should contain only letters!";
-    } else {
-      delete newErrors.name;
-    }
+    if (name === "name" && !validateName(value)) newErrors.name = "⚠ Name should contain only letters!";
+    else delete newErrors.name;
 
-    if (name === "confirmPassword" && value !== form.password) {
-      newErrors.confirmPassword = "⚠ Passwords do not match!";
-    } else {
-      delete newErrors.confirmPassword;
-    }
+    if (name === "confirmPassword" && value !== form.password) newErrors.confirmPassword = "⚠ Passwords do not match!";
+    else delete newErrors.confirmPassword;
 
     setErrors(newErrors);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (Object.keys(errors).length > 0 || !form.name || !form.email || !form.password || !form.confirmPassword) {
@@ -54,9 +46,8 @@ const SignUp = () => {
       return;
     }
 
-    console.log("User registered:", form);
-    alert("✅ Account created successfully!");
-    navigate("/login");
+    const success = await actions.signup(form.name, form.email, form.password);
+    if (success) navigate("/login");
   };
 
   return (
@@ -72,7 +63,7 @@ const SignUp = () => {
 
           <div className="mb-3">
             <label className="form-label">Email</label>
-            <input type="email" name="email" className="form-control" placeholder="Your email" value={form.email} onChange={handleChange} required/>
+            <input type="email" name="email" className="form-control" placeholder="Your email" value={form.email} onChange={handleChange} required />
             {errors.email && <p className="text-danger mt-1">{errors.email}</p>}
           </div>
 
