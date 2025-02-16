@@ -50,22 +50,22 @@ def signup():
 # La función create_access_token() se utiliza para generar el JWT.
 @api.route("/login", methods=["POST"])
 def login():
-           
-        email = request.json.get("email", None)
-        password = request.json.get("password", None)
-        #Tenemos que hacer una consulta de usuario 
-        # user = User.query.filter_by(email=email).first()
-        user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
-        print(User)
-        if user is None:
-           return jsonify({"msg": "Email not found "}), 401   
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
 
-        if email == user.email and password == user.password:
-           access_token = create_access_token(identity=email)    
-           return jsonify(access_token=access_token), 200
-        else:
-            return jsonify({"msg": "bad email or password"}), 401 
-        
+    if not email or not password:
+        return jsonify({"msg": "Email y contraseña son requeridos"}), 400
+
+    user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
+
+    if user is None:
+        return jsonify({"msg": "Email o Contraseña incorrectos"}), 401
+
+    if user.password != password:
+        return jsonify({"msg": "Email o Contraseña incorrectas"}), 401
+
+    access_token = create_access_token(identity=user.id)
+    return jsonify({"access_token": access_token, "user_id": user.id}), 200
 
 # Gets Usuarios_________ 
 
