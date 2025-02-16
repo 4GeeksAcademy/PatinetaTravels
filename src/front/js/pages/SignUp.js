@@ -87,7 +87,7 @@ const SignUp = () => {
           </button>
 
           <button type="button" className="btn btn-outline-dark w-100" onClick={() => navigate("/")}>
-            ⬅ Back to Home
+            Back to Home
           </button>
         </form>
       </div>
