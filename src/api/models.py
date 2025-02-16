@@ -32,6 +32,8 @@ class User(Base):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
+
+    
 class City (Base):
     __tablename__ = 'city'
     id = mapped_column(Integer, primary_key=True)
@@ -101,6 +103,7 @@ class Favorites (Base):
     __tablename__ = 'favorites'
     id = mapped_column(Integer, primary_key=True)
     hotel_id: Mapped[int] = mapped_column(ForeignKey("hotel.id"))
+    city_id: Mapped[int] = mapped_column(ForeignKey("city.id"))
     interest_point_id: Mapped[int] = mapped_column(ForeignKey("interest_point.id"))
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
