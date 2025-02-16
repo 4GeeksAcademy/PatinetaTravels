@@ -1,30 +1,26 @@
 from flask_sqlalchemy import SQLAlchemy
-import os
-import sys
 from sqlalchemy import Integer, String, Boolean
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import create_engine
-from eralchemy2 import render_er
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship, Mapped
-from typing import List
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
+from typing import List
 
 db = SQLAlchemy()
 
-Base = declarative_base()
 
-class User(Base):
-    __tablename__ = 'user'
-    id = mapped_column(Integer, primary_key=True)
-    email = mapped_column(String(120), unique=True, nullable=False)
-    password = mapped_column(String(80), unique=False, nullable=False)
-    is_active = mapped_column(Boolean(), unique=False, nullable=False)
-    favorites: Mapped[List["City"]] = relationship()
-    favorites: Mapped[List["Restaurant"]] = relationship()
-    favorites: Mapped[List["Interest_point"]] = relationship()
-    favorites: Mapped[List["Hotel"]] = relationship()
-    
+class User (db.Model):
+    __tablename__ = "user"
+    id = db.Column(Integer, primary_key=True)
+    email = db.Column(String(120),  nullable=False)
+    password = db.Column(String(80), nullable=False)
+    is_active = db.Column(Boolean(),  nullable=False)
+    favorites=db.relationship("Favorites", backref="user")
+    city=db.relationship("City", backref="user")
+    restaurant=db.relationship("Restaurant", backref="user")
+    hotel=db.relationship("Hotel", backref="user")
+    interest_point=db.relationship("Interest_point", backref="user")
+
+    def __repr__(self):
+         return '<Users %r>' % self.username
 
     def serialize(self):
         return {
@@ -32,15 +28,13 @@ class User(Base):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
-
-    
-class City (Base):
-    __tablename__ = 'city'
-    id = mapped_column(Integer, primary_key=True)
-    city_name = mapped_column(String(30),unique=True, nullable=False)
-    country_name = mapped_column(String(30),nullable=False)
-    favorites: Mapped[List["Favorites"]] = relationship()
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+class City (db.Model):
+    __tablename__ = "city"
+    id = db.Column(Integer, primary_key=True)
+    city_name = db.Column(String(30), nullable=False)
+    country_name = db.Column(String(30),nullable=False)
+    user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
+    favorites =db.relationship("Favorites", backref="city")
 
     def serialize(self):
         return {
@@ -50,13 +44,13 @@ class City (Base):
             # do not serialize the password, its a security breach
         }
 
-class Restaurant (Base):
-    __tablename__ = 'restaurant'
-    id =mapped_column(Integer,primary_key=True)
-    restaurant_name = mapped_column (String(30), unique=True, nullable=False)
-    address = mapped_column(String(100),unique=False, nullable=False)
-    favorites: Mapped[List["Favorites"]] = relationship()
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+class Restaurant (db.Model):
+    __tablename__ = "restaurant"
+    id =db.Column(Integer,primary_key=True)
+    restaurant_name = db.Column (String(30), nullable=False)
+    address = db.Column(String(100), nullable=False)
+    user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
+    favorites =db.relationship("Favorites", backref="restaurant")
 
     def serialize(self):
         return {
@@ -66,14 +60,14 @@ class Restaurant (Base):
             # do not serialize the password, its a security breach
         }
 
-class Interest_point(Base):
-    __tablename__ = 'interest_point'
-    id = mapped_column(Integer, primary_key=True)
-    int_name = mapped_column(String(100),unique=True, nullable=False)
-    locality = mapped_column(String(100),unique=False , nullable=False)
-    point_address = mapped_column(String(100),unique=True , nullable=False)
-    favorites: Mapped[List["Favorites"]] = relationship()
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+class Interest_point(db.Model):
+    __tablename__ = "interest_point"
+    id = db.Column(Integer, primary_key=True)
+    int_name = db.Column(String(100), nullable=False)
+    locality = db.Column(String(100), nullable=False)
+    point_address = db.Column(String(100), nullable=False)
+    user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
+    favorites =db.relationship("Favorites", backref="interest_point")
 
     def serialize(self):
         return {
@@ -83,13 +77,13 @@ class Interest_point(Base):
             # do not serialize the password, its a security breach
         }
 
-class Hotel(Base):
-    __tablename__ = 'hotel'
-    id = mapped_column(Integer, primary_key=True)
-    hotel_name = mapped_column(String(50),unique=True, nullable=False)
-    hotel_address = mapped_column(String(100),unique=True, nullable=False)
-    favorites: Mapped[List["Favorites"]] = relationship()
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+class Hotel(db.Model):
+    __tablename__ = "hotel"
+    id = db.Column(Integer, primary_key=True)
+    hotel_name = db.Column(String(50), nullable=False)
+    hotel_address = db.Column(String(100), nullable=False)
+    user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
+    favorites =db.relationship("Favorites", backref="hotel")
 
     def serialize(self):
         return {
@@ -99,14 +93,14 @@ class Hotel(Base):
             # do not serialize the password, its a security breach
         }
 
-class Favorites (Base):
-    __tablename__ = 'favorites'
-    id = mapped_column(Integer, primary_key=True)
-    hotel_id: Mapped[int] = mapped_column(ForeignKey("hotel.id"))
-    city_id: Mapped[int] = mapped_column(ForeignKey("city.id"))
-    interest_point_id: Mapped[int] = mapped_column(ForeignKey("interest_point.id"))
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+class Favorites (db.Model):
+    __tablename__ = "favorites"
+    id = db.Column(Integer, primary_key=True)
+    user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
+    city_id= db.Column(db.Integer, db.ForeignKey("city.id"))
+    hotel_id= db.Column(db.Integer, db.ForeignKey("hotel.id"))
+    restaurant_id= db.Column(db.Integer, db.ForeignKey("restaurant.id"))
+    interest_point_id= db.Column(db.Integer, db.ForeignKey("interest_point.id"))
 
     def serialize(self):
         return {
