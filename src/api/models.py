@@ -20,7 +20,7 @@ class User (db.Model):
     interest_point=db.relationship("Interest_point", backref="user")
 
     def __repr__(self):
-         return '<Users %r>' % self.username
+        return '<User %r>' % self.email 
 
     def serialize(self):
         return {
