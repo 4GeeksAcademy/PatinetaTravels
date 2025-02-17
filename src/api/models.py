@@ -1,18 +1,18 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, String, Boolean, ForeignKey
+from sqlalchemy import Integer, String, Boolean
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from typing import List
 
 db = SQLAlchemy()
 
 class User(db.Model):
-    __tablename__ = "users"
+    __tablename__ = "user"
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(120), nullable=False)
     email = db.Column(String(120), nullable=False)
     password = db.Column(String(80), nullable=False)
     is_active = db.Column(Boolean(), nullable=False)
-
-    # Relaciones corregidas
     favorites = db.relationship("Favorites", backref="user")
     city = db.relationship("City", backref="user")
     restaurant = db.relationship("Restaurant", backref="user")
@@ -20,7 +20,7 @@ class User(db.Model):
     interest_point = db.relationship("Interest_point", backref="user")
 
     def __repr__(self):
-        return f'<User {self.email}>'
+         return '<Users %r>' % self.username
 
     def serialize(self):
         return {
@@ -34,7 +34,7 @@ class City(db.Model):
     id = db.Column(Integer, primary_key=True)
     city_name = db.Column(String(30), nullable=False)
     country_name = db.Column(String(30), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     favorites = db.relationship("Favorites", backref="city")
 
     def serialize(self):
@@ -49,7 +49,7 @@ class Restaurant(db.Model):
     id = db.Column(Integer, primary_key=True)
     restaurant_name = db.Column(String(30), nullable=False)
     address = db.Column(String(100), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     favorites = db.relationship("Favorites", backref="restaurant")
 
     def serialize(self):
@@ -80,7 +80,7 @@ class Hotel(db.Model):
     id = db.Column(Integer, primary_key=True)
     hotel_name = db.Column(String(50), nullable=False)
     hotel_address = db.Column(String(100), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     favorites = db.relationship("Favorites", backref="hotel")
 
     def serialize(self):
@@ -93,17 +93,20 @@ class Hotel(db.Model):
 class Favorites(db.Model):
     __tablename__ = "favorites"
     id = db.Column(Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id")) 
-    city_id = db.Column(db.Integer, db.ForeignKey("city.id"), nullable=True)
-    hotel_id = db.Column(db.Integer, db.ForeignKey("hotel.id"), nullable=True)
-    restaurant_id = db.Column(db.Integer, db.ForeignKey("restaurant.id"), nullable=True)
-    interest_point_id = db.Column(db.Integer, db.ForeignKey("interest_point.id"), nullable=True)
+    user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
+    city_id= db.Column(db.Integer, db.ForeignKey("city.id"))
+    hotel_id= db.Column(db.Integer, db.ForeignKey("hotel.id"))
+    restaurant_id= db.Column(db.Integer, db.ForeignKey("restaurant.id"))
+    interest_point_id= db.Column(db.Integer, db.ForeignKey("interest_point.id"))
 
     def serialize(self):
         return {
             "id": self.id,
             "hotel_id": self.hotel_id,
-            "interest_point_id": self.interest_point_id,
+            "interest_point": self.interest_point.id,
             "restaurant_id": self.restaurant_id,
-            "city_id": self.city_id
+            "city_id": self.city_id            
+            
+
+            # do not serialize the password, its a security breach
         }
