@@ -1,0 +1,30 @@
+.signup-card {
+    max-width: 500px; 
+    width: 100%;
+    border-radius: 15px;
+    background: white;
+    padding: 40px;
+  }
+  
+  .btn-primary {
+    background-color: #4db6ac;
+    border: none;
+    transition: 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #009688;
+  }
+  
+  .btn-outline-secondary, .btn-outline-dark {
+    transition: 0.3s ease;
+  }
+  
+  .btn-outline-secondary:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .btn-outline-dark:hover {
+    background-color: #d6d6d6;
+  }
+  
